@@ -4,13 +4,16 @@ networks:
   laravel:
     name: laravel
     driver: bridge
-    
+
 services:
   apache:
     container_name: apache
     build:
       context: .
       dockerfile: apache.dockerfile
+    depends_on:
+      - php
+      - mysql
     ports:
       - 80:80
       - 443:443
@@ -66,4 +69,11 @@ services:
       - "8080:80"
     networks:
       - laravel
-
+  composer:
+    image: composer:2.8.3
+    container_name: composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - laravel
